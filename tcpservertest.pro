@@ -5,7 +5,6 @@
 #-------------------------------------------------
 
 QT       += core gui network
-QT += x11extras
 QT += multimedia
 QT += multimediawidgets
 
@@ -13,11 +12,22 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = tcpservertest
 TEMPLATE = app
-LIBS += -lX11
+
 
 SOURCES += main.cpp\
         dialog.cpp \
-    simulationmouseevent.cpp
+    socketlistmodel.cpp \
 
 HEADERS  += dialog.h \
-    simulationmouseevent.h
+    socketlistmodel.h \
+    ../../../aac/fdk-aac-0.1.4/include/fdk-aac/aacdecoder_lib.h \
+    ../../../aac/fdk-aac-0.1.4/include/fdk-aac/aacenc_lib.h \
+    ../../../aac/fdk-aac-0.1.4/include/fdk-aac/FDK_audio.h \
+    ../../../aac/fdk-aac-0.1.4/include/fdk-aac/genericStds.h \
+    ../../../aac/fdk-aac-0.1.4/include/fdk-aac/machine_type.h
+
+
+unix:!macx: LIBS += -L$$PWD/../../../aac/fdk-aac-0.1.4/lib/ -lfdk-aac
+
+INCLUDEPATH += $$PWD/../../../aac/fdk-aac-0.1.4/include/fdk-aac
+DEPENDPATH += $$PWD/../../../aac/fdk-aac-0.1.4/include/fdk-aac

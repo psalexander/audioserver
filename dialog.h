@@ -12,16 +12,9 @@
 #include <QNetworkSession>
 #include <QNetworkConfigurationManager>
 #include <QMessageBox>
-#include <QMouseEvent>
 #include <QEvent>
 #include <QApplication>
 #include <QDesktopWidget>
-#include <QCursor>
-#include <QScreen>
-#include <X11/Xlib.h>
-#include <X11/keysym.h>
-#include <X11/Xutil.h>
-#include <QX11Info>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -29,8 +22,15 @@
 #include <QPointF>
 #include <QMediaPlayer>
 #include <QVideoWidget>
+#include <QListView>
+#include <QLineEdit>
+#include <QTextBrowser>
+#include <QAudioInput>
+#include <QAudioFormat>
 
 #include "simulationmouseevent.h"
+#include "socketlistmodel.h"
+#include "aacenc_lib.h"
 
 class Dialog : public QDialog
 {
@@ -43,26 +43,45 @@ private:
     QPushButton *mStartServerButton;
     QPushButton *mStopServerButton;
     QTextEdit *mLogServerEdit;
-
-    QMediaPlayer *player;
+    QLineEdit *messageLine;
 
     QTcpServer *tcpServer;
     QStringList fortunes;
+
+    QList<QTcpSocket *> socketsList;
+
     QNetworkSession *networkSession;
+QTextBrowser *textBrowser;
+
+    SocketListModel *model;
+    QListView *connectionsListWidget;
+
     void sessionOpened();
     void sendFortune();
+
+    QAudioInput *audioInput;
 
     void initGUI();
     void startServer();
     void stopServer();
-    void mouseClick(int);
-    void mouseScroll(int);
+
+    QString getFdkAacErrorCode(AACENC_ERROR res);
 public slots:
     void onClickStartButton();
     void onClickStopButton();
 
+    void onClickStartAudioButton();
+    void onClickStopAudioButton();
+    void onClickSendMessageButton();
+
     void onNewConnection();
+    void onDisconnected();
     void onReadFromSocket();
+
+    void startCaptureAudio();
+    void stopCaptureAudio();
+
+    void readyReadAudioBuffer();
 };
 
 #endif // DIALOG_H
